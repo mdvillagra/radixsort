@@ -1,0 +1,3 @@
+[submodule "src/lambdaworks"]
+	path = src/lambdaworks
+	url = https://github.com/lambdaclass/lambdaworks.git
