@@ -1,5 +1,5 @@
 ## Radixsort
-[Radixsort](https://en.wikipedia.org/wiki/Radix_sort) algorithm in Rust for large integers. For handing large integers, we use [Lambdaworks](https://github.com/lambdaclass/lambdaworks) for sorting numbers from the Stark prime field.
+[Radixsort](https://en.wikipedia.org/wiki/Radix_sort) algorithm in Rust for large integers. For handling large integers, we use [Lambdaworks](https://github.com/lambdaclass/lambdaworks) for sorting numbers from the Stark prime field.
 
 ## Results
 
