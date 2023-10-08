@@ -21,10 +21,11 @@ fn countingsort_limbs(tuples: &Vec<(Felt252, Felt252)>, i: u16) -> Vec<(Felt252,
         vec![(Felt252::zero(), Felt252::zero()); tuples.len()];
 
     for j in (0..tuples.len()).rev() {
-        output
-            [buckets[((tuples[j].0.representative().limbs[limb]) / (10u64.pow(d)) % 10u64) as usize]-1] =
-            tuples[j].clone();
-            buckets[((tuples[j].0.representative().limbs[limb]) / (10u64.pow(d)) % 10u64) as usize] -= 1;
+        output[buckets
+            [((tuples[j].0.representative().limbs[limb]) / (10u64.pow(d)) % 10u64) as usize]
+            - 1] = tuples[j].clone();
+        buckets[((tuples[j].0.representative().limbs[limb]) / (10u64.pow(d)) % 10u64) as usize] -=
+            1;
     }
 
     output
@@ -66,20 +67,7 @@ fn main() {
     let mut tuples1: Vec<_> = addresses1.into_iter().zip(values1).collect();
     let mut tuples2 = tuples1.clone();
 
-    println!("sin ordernar");
-    for i in 0..tuples1.len() {
-        println!("{:?}", tuples1[i].0.representative().limbs);
-    }
-    println!("==========================");
     tuples1.sort_by(|(x, _), (y, _)| x.representative().cmp(&y.representative()));
-    println!("despues de ordenar por sortby");
-    for i in 0..tuples1.len() {
-        println!("{:?}", tuples1[i].0.representative().limbs);
-    }
-    println!("==========================");
+
     radixsort(&mut tuples2);
-    println!("despues de ordernar por radixsort");
-    for i in 0..tuples1.len() {
-        println!("{:?}", tuples2[i].0.representative().limbs);
-    }
 }
