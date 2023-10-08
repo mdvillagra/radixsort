@@ -22,7 +22,7 @@ fn radixsort_bench(c: &mut Criterion) {
     println!("=== Each round the input size increases by {} numbers ===", n_inputs);
 
     for rounds in 0..n_rounds {
-        for i in 0..n_inputs {
+        for _i in 0..n_inputs {
             addresses1.push(Felt252::from_hex_unchecked(
                 &format!(
                     "{}{}{}{}",
