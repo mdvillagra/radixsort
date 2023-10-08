@@ -1,76 +1,85 @@
 use cairo_platinum_prover::Felt252;
-use hex_wrapper::{Hex32, Hex64};
-use std::{collections::HashMap, ops::AddAssign};
+use hex_wrapper::Hex64;
 
-fn hex_to_dec(c: char) -> usize {
-    match c {
-        '0' => 0,
-        '1' => 1,
-        '2' => 2,
-        '3' => 3,
-        '4' => 4,
-        '5' => 5,
-        '6' => 6,
-        '7' => 7,
-        '8' => 8,
-        '9' => 9,
-        'a' | 'A' => 10,
-        'b' | 'B' => 11,
-        'c' | 'C' => 12,
-        'd' | 'D' => 13,
-        'e' | 'E' => 14,
-        _ => 15,
+// countingsort over the i-th digits
+// i takes values from 0 to 255
+fn countingsort_limbs(tuples: &Vec<(Felt252, Felt252)>, i: u16) -> Vec<(Felt252, Felt252)> {
+    let mut buckets: Vec<usize> = vec![0; 10]; //buckets for digits 0 to 9
+    let limb: usize = 3 - (i as u16 / 20u16) as usize; //limb position where the i-th digit is
+    let d = (i as u32) % 20u32; //position of the i-th digit inside the limb
+
+    for j in 0..tuples.len() {
+        buckets[((tuples[j].0.representative().limbs[limb]) / (10u64.pow(d)) % 10u64) as usize] +=
+            1;
     }
+
+    for j in 1..10 {
+        buckets[j] += buckets[j - 1];
+    }
+
+    let mut output: Vec<(Felt252, Felt252)> =
+        vec![(Felt252::zero(), Felt252::zero()); tuples.len()];
+
+    for j in (0..tuples.len()).rev() {
+        output
+            [buckets[((tuples[j].0.representative().limbs[limb]) / (10u64.pow(d)) % 10u64) as usize]-1] =
+            tuples[j].clone();
+            buckets[((tuples[j].0.representative().limbs[limb]) / (10u64.pow(d)) % 10u64) as usize] -= 1;
+    }
+
+    output
 }
 
-// Countingsort procedure for vectors of pairs.
-// It sorts using the i-th digit from the right in the hex representation of the left element.
-fn countingsort(tuples: &Vec<(Felt252, Felt252)>, i: usize) {
-    let mut c: Vec<u64> = vec![0; 16];
-
-    //compute the buckets
-    for j in 0..tuples.len() {
-        if tuples[j].0.to_string().len() - 2 < i {
-            c[0] += 1;
-        } else {
-            c[hex_to_dec(
-                tuples[j]
-                    .0
-                    .to_string()
-                    .chars()
-                    .nth(tuples[j].0.to_string().len() - 2 - i - 1)
-                    .unwrap(),
-            )] += 1;
-        }
-    }
-
-    //accumulates
-    for j in 1..16 {
-        c[j] = c[j] + c[j - 1];
+//radix sort algorithm
+fn radixsort(tuples: &mut Vec<(Felt252, Felt252)>) {
+    for i in 0..80 {
+        let output = countingsort_limbs(tuples, i);
+        *tuples = output;
     }
 }
 
 fn main() {
     let mut addresses1: Vec<Felt252> = Vec::new();
     let mut values1: Vec<Felt252> = Vec::new();
-    let mut addresses2: Vec<Felt252> = Vec::new();
-    let mut values2: Vec<Felt252> = Vec::new();
 
     for _i in (0..5).step_by(1) {
-        addresses1.push(Felt252::from_hex_unchecked(&Hex64::rand().to_string()[0..]));
-        addresses2.push(Felt252::from_hex_unchecked(&Hex32::rand().to_string()[0..]));
-        values1.push(Felt252::from_hex_unchecked(&Hex64::rand().to_string()[0..]));
-        values2.push(Felt252::from_hex_unchecked(&Hex32::rand().to_string()[0..]));
+        addresses1.push(Felt252::from_hex_unchecked(
+            &format!(
+                "{}{}{}{}",
+                Hex64::rand().to_string(),
+                Hex64::rand().to_string(),
+                Hex64::rand().to_string(),
+                Hex64::rand().to_string()
+            )[0..],
+        ));
+        values1.push(Felt252::from_hex_unchecked(
+            &format!(
+                "{}{}{}{}",
+                Hex64::rand().to_string(),
+                Hex64::rand().to_string(),
+                Hex64::rand().to_string(),
+                Hex64::rand().to_string()
+            )[0..],
+        ));
     }
 
     let mut tuples1: Vec<_> = addresses1.into_iter().zip(values1).collect();
-    let mut tuples2: Vec<_> = addresses2.into_iter().zip(values2).collect();
+    let mut tuples2 = tuples1.clone();
 
+    println!("sin ordernar");
+    for i in 0..tuples1.len() {
+        println!("{:?}", tuples1[i].0.representative().limbs);
+    }
+    println!("==========================");
     tuples1.sort_by(|(x, _), (y, _)| x.representative().cmp(&y.representative()));
-
-    println!(
-        "{} {}",
-        tuples1[0].0.to_string().len(),
-        tuples2[0].0.to_string().len()
-    );
+    println!("despues de ordenar por sortby");
+    for i in 0..tuples1.len() {
+        println!("{:?}", tuples1[i].0.representative().limbs);
+    }
+    println!("==========================");
+    radixsort(&mut tuples2);
+    println!("despues de ordernar por radixsort");
+    for i in 0..tuples1.len() {
+        println!("{:?}", tuples2[i].0.representative().limbs);
+    }
 }

@@ -7,5 +7,4 @@ edition = "2021"
 
 [dependencies]
 cairo-platinum-prover = {path = "src/lambdaworks/provers/cairo"}
-hex = "0.4.3"
 hex-wrapper = { version = "1.4.1", features = ["rand"]}
