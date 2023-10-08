@@ -1,9 +1,6 @@
 use criterion::{
-    black_box, criterion_group, criterion_main, BenchmarkGroup, BenchmarkId, Criterion,
-    SamplingMode,
+    black_box, criterion_group, criterion_main, BenchmarkId, Criterion,
 };
-
-use std::slice;
 
 use cairo_platinum_prover::Felt252;
 use hex_wrapper::Hex64;
@@ -45,8 +42,6 @@ fn radixsort_bench(c: &mut Criterion) {
             .zip(values1.clone())
             .collect();
         let tuples2 = tuples1.clone();
-
-        //tuples1.sort_by(|(x, _), (y, _)| x.representative().cmp(&y.representative()));
 
         group.sample_size(10);
 
