@@ -9,6 +9,10 @@ See [here](https://mdvillagra.github.io/radixsort/) for more detailed results.
 
 ![100000_to_1000000](https://mdvillagra.github.io/radixsort/criterion/Radixsort-vs-sortby-100-to-1000/report/lines.svg)
 
+![sort_by only](https://mdvillagra.github.io/radixsort/criterion/Radixsort-vs-sortby-100-to-1000/sort_by/report/lines.svg)
+
+![radixsort only](https://mdvillagra.github.io/radixsort/criterion/Radixsort-vs-sortby-100-to-1000/radixsort/report/lines.svg)
+
 ## Potential Improvements
 
 There are still room for improvements in our naive `radixsort` implementation.
