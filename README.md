@@ -3,11 +3,11 @@
 
 ## Results
 
-Below we present a benchmark comparing `radixsort` against the method `sort_by` from `std::slice`.  Clearly, `sort_by` beats our `radixsort` by a wide margin, where the execution times of `radixsort` is in the order of miliseconds and the `sort_by` method is in the order of microseconds. We start with a vector of 50 random numbers each of size 256 bits and in each iteration we add 50 more numbers upt to 500 numbers in total.
+Below we present a benchmark comparing `radixsort` against the method `sort_by` from `std::slice`. All benchmarks were run on an Intel Xeon CPU  of 2.40GHz. Clearly, `sort_by` beats our `radixsort` by a wide margin, where the execution times of `radixsort` is in the order of miliseconds and the `sort_by` method is in the order of microseconds. We start with a vector of 100,000 random numbers each of size 256 bits and in each iteration we add 100,000 more numbers upt to 1,000,000 numbers in total.
 
 See [here](https://mdvillagra.github.io/radixsort/) for more detailed results.
 
-![50_to_500](https://mdvillagra.github.io/radixsort/50_to_500/Radixsort/report/lines.svg)
+![100000_to_1000000](https://mdvillagra.github.io/radixsort/criterion/Radixsort-vs-sortby-100-to-1000/report/lines.svg)
 
 ## Potential Improvements
 
