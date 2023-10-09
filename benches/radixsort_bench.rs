@@ -10,13 +10,13 @@ mod radixsort;
 use radixsort::radixsort;
 
 fn radixsort_bench(c: &mut Criterion) {
-    let mut group = c.benchmark_group("Radixsort");
+    let mut group = c.benchmark_group("Radixsort-vs-sortby-100-to-1000");
 
     let mut addresses1: Vec<Felt252> = Vec::new();
     let mut values1: Vec<Felt252> = Vec::new();
 
-    let n_rounds = 1;//number of rounds to test
-    let n_inputs = 50;//size increase in each round
+    let n_rounds = 10;//number of rounds to test
+    let n_inputs = 100000;//size increase in each round
 
     println!("=== Benchmarking {} inputs ===", n_rounds);
     println!("=== Each round the input size increases by {} numbers ===", n_inputs);
@@ -59,7 +59,7 @@ fn radixsort_bench(c: &mut Criterion) {
         );
 
         group.bench_function(BenchmarkId::new("sort_by", rounds as u32), |b| {
-            b.iter(|| tuples1.sort_by(|(x, _), (y, _)| x.representative().cmp(&y.representative())))
+            b.iter(|| black_box(tuples1.sort_by(|(x, _), (y, _)| x.representative().cmp(&y.representative()))))
         });
     }
 }
